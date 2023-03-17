@@ -36,6 +36,7 @@ from libqtile.config import Click, Drag, Screen
 # esto es para definir las funciones de los espacios de trabajo.
 from libqtile.config import Key, Group, Match
 from libqtile.lazy import lazy
+from libqtile.widget import genpolltext
 MOD = "MOD4"
 TERMINAL = "alacritty"
 MYBROWSER = "firefox"
@@ -43,6 +44,13 @@ MYBROWSER = "firefox"
 def turn_off_screen():
     """Apagar pantalla"""
     subprocess.run(["xset", "dpms", "force", "off"], check=True)
+# Se supone que aqui defino una clase para poder usar mi script tumbadito
+class RelojBonito(genpolltext):
+    """Se supone que esto sirve para poder correr mi script del relojito"""
+    def __init__(self, **config):
+        super().__init__(**config)
+        self.update_interval = 1
+        return subprocess.check_output(['python', 'relojBonito.py']).decode('utf-8').strip()
 
 # Abrir Alacritty con tmux y Ranger
 def alacritty_tmux_ranger():
@@ -283,6 +291,7 @@ screens = [
                 widget.Systray(),
                 widget.Spacer(length=10),
                 widget.Clock(format="%Y-%m-%d %a %I:%M %p", background=colo[3]),
+                widget.RelojBonito(),
                 #widget.QuickExit(),
             ],
             24, #Esta es la altura de la barra.
